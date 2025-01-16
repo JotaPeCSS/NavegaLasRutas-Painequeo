@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "name": "Polera",
+      "price": 15.99,
+      "category": "Camisas",
+      "size": "M",
+      "color": "Rojo",
+      "stock": 10
+    },
+    {
+      "id": 2,
+      "name": "Poleron",
+      "price": 18.99,
+      "category": "Camisas",
+      "size": "L",
+      "color": "Azul",
+      "stock": 8
+    },
+    {
+      "id": 3,
+      "name": "Chaqueta",
+      "price": 14.99,
+      "category": "Camisas",
+      "size": "S",
+      "color": "Amarillo",
+      "stock": 12
+    }
+  ]
+  
