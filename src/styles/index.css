@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9; /* Fondo general */
+  color: #333; /* Color del texto */
+}
+
+h1, h2, h3, p {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Verde suave */
+  color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 8px; /* Bordes redondeados */
+  transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: #45a049; /* Más oscuro al pasar el cursor */
+}
+
+.material-symbols-outlined {
+  font-size: 24px;
+  color: white;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 10px;
+  background-color: white;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.product-card button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-card button:hover {
+  background-color: #0056b3; /* Azul más oscuro */
+}
+
+.alert {
+  background-color: #ffedcc; /* Fondo amarillo pálido */
+  color: #7a5300; /* Texto amarillo oscuro */
+  padding: 15px;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.alert h4 {
+  margin-bottom: 10px;
+}
+
+.alert button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.alert button:hover {
+  background-color: #0056b3;
+}

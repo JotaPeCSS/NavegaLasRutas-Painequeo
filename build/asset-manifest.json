@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Entregable1_React-JS_JorgePainequeo/static/css/main.e6c13ad2.css",
+    "main.js": "/Entregable1_React-JS_JorgePainequeo/static/js/main.478004b8.js",
+    "static/media/logo.png": "/Entregable1_React-JS_JorgePainequeo/static/media/logo.f089f7a138131337cd22.png",
+    "index.html": "/Entregable1_React-JS_JorgePainequeo/index.html",
+    "main.e6c13ad2.css.map": "/Entregable1_React-JS_JorgePainequeo/static/css/main.e6c13ad2.css.map",
+    "main.478004b8.js.map": "/Entregable1_React-JS_JorgePainequeo/static/js/main.478004b8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.478004b8.js"
+  ]
+}

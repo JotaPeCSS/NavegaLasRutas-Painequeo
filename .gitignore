@@ -1,0 +1,15 @@
+// src/components/NavBar.js
+import React from 'react';
+import CartWidget from './CartWidget'; // Importamos el CartWidget
+
+function NavBar() {
+  return (
+    <nav>
+      <h1>Mi Tienda Online</h1>
+      <CartWidget />  {/* Aquí renderizamos el CartWidget */}
+    </nav>
+  );
+}
+
+export default NavBar;
+node_modules
