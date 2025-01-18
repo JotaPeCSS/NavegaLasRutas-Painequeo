@@ -1,14 +1,13 @@
 {
   "files": {
-    "main.css": "/Entregable1_React-JS_JorgePainequeo/static/css/main.e6c13ad2.css",
-    "main.js": "/Entregable1_React-JS_JorgePainequeo/static/js/main.478004b8.js",
-    "static/media/logo.png": "/Entregable1_React-JS_JorgePainequeo/static/media/logo.f089f7a138131337cd22.png",
-    "index.html": "/Entregable1_React-JS_JorgePainequeo/index.html",
-    "main.e6c13ad2.css.map": "/Entregable1_React-JS_JorgePainequeo/static/css/main.e6c13ad2.css.map",
-    "main.478004b8.js.map": "/Entregable1_React-JS_JorgePainequeo/static/js/main.478004b8.js.map"
+    "main.css": "/NavegaLasRutas-Painequeo/static/css/main.1061d363.css",
+    "main.js": "/NavegaLasRutas-Painequeo/static/js/main.3b870bf8.js",
+    "index.html": "/NavegaLasRutas-Painequeo/index.html",
+    "main.1061d363.css.map": "/NavegaLasRutas-Painequeo/static/css/main.1061d363.css.map",
+    "main.3b870bf8.js.map": "/NavegaLasRutas-Painequeo/static/js/main.3b870bf8.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.478004b8.js"
+    "static/css/main.1061d363.css",
+    "static/js/main.3b870bf8.js"
   ]
 }

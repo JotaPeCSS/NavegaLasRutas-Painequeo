@@ -9,7 +9,6 @@ const styles = {
     backgroundColor: "#343a40",
     color: "white",
     padding: "10px 20px",
-    position: "relative",
   },
   logo: {
     height: "40px",
@@ -17,7 +16,16 @@ const styles = {
   },
 };
 
-const NavBar = ({ cartItems, cartOpen, setCartOpen, emptyCart }) => {
+const NavBar = ({
+  cartItems,
+  setCartItems,
+  cartOpen,
+  setCartOpen,
+  emptyCart,
+  removeFromCart,
+  products,
+  setProducts,
+}) => {
   return (
     <nav style={styles.navbar}>
       <a href="/">
@@ -25,9 +33,13 @@ const NavBar = ({ cartItems, cartOpen, setCartOpen, emptyCart }) => {
       </a>
       <CartWidget
         cartItems={cartItems}
+        setCartItems={setCartItems}
         cartOpen={cartOpen}
         setCartOpen={setCartOpen}
         emptyCart={emptyCart}
+        removeFromCart={removeFromCart}
+        products={products}
+        setProducts={setProducts}
       />
     </nav>
   );

@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 const styles = {
   container: {
     padding: "20px",
     textAlign: "center",
-  },
-  greeting: {
-    marginBottom: "20px",
   },
   productGrid: {
     display: "flex",
@@ -18,7 +15,7 @@ const styles = {
     border: "1px solid #ccc",
     backgroundColor: "#fff",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    borderRadius: "5px",
+    borderRadius: "8px",
     textAlign: "center",
   },
   button: {
@@ -30,43 +27,32 @@ const styles = {
     borderRadius: "3px",
     cursor: "pointer",
   },
+  disabledButton: {
+    backgroundColor: "#ccc",
+    color: "#666",
+    border: "none",
+    padding: "5px 10px",
+    borderRadius: "3px",
+    cursor: "not-allowed",
+  },
 };
 
-const ItemListContainer = ({ greeting, addToCart }) => {
-  const [products, setProducts] = useState([
-    { id: 1, name: "Camisa Roja", price: 20, stock: 10 },
-    { id: 2, name: "Camisa Azul", price: 25, stock: 8 },
-    { id: 3, name: "Camisa Amarilla", price: 30, stock: 5 },
-  ]);
-
-  const handleAddToCart = (product) => {
-    if (product.stock > 0) {
-      addToCart(product); // Añadimos el producto al carrito
-      setProducts((prevProducts) =>
-        prevProducts.map((p) =>
-          p.id === product.id ? { ...p, stock: p.stock - 1 } : p
-        )
-      );
-    } else {
-      alert(`El producto ${product.name} no tiene stock disponible.`);
-    }
-  };
-
+const ItemListContainer = ({ greeting, products, addToCart }) => {
   return (
     <div style={styles.container}>
-      <h2 style={styles.greeting}>{greeting}</h2>
+      <h2>{greeting}</h2>
       <div style={styles.productGrid}>
         {products.map((product) => (
           <div key={product.id} style={styles.productCard}>
             <p>{product.name}</p>
-            <p>${product.price.toFixed(2)}</p>
+            <p>Precio: ${product.price.toFixed(2)}</p>
             <p>Stock: {product.stock}</p>
             <button
-              style={styles.button}
-              onClick={() => handleAddToCart(product)}
+              style={product.stock > 0 ? styles.button : styles.disabledButton}
+              onClick={() => addToCart(product)}
               disabled={product.stock === 0}
             >
-              {product.stock === 0 ? "Sin Stock" : "Añadir al Carrito"}
+              {product.stock > 0 ? "Añadir al carrito" : "Sin stock"}
             </button>
           </div>
         ))}

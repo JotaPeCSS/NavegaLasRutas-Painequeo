@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import Alert from "react-bootstrap/Alert";
+import React, { useEffect } from "react";
 
 const styles = {
   cartWidget: {
@@ -14,7 +13,7 @@ const styles = {
     position: "absolute",
     right: "0",
     top: "30px",
-    width: "250px",
+    width: "300px",
     backgroundColor: "#fff",
     color: "#333",
     borderRadius: "8px",
@@ -22,81 +21,95 @@ const styles = {
     padding: "15px",
     zIndex: "1000",
   },
-  alertContainer: {
-    position: "fixed",
-    top: "20px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    zIndex: "1001",
-    maxWidth: "400px",
-    textAlign: "center",
-  },
-  alert: {
-    borderRadius: "8px",
-    backgroundColor: "#ffc107",
-    color: "#fff",
-    padding: "10px",
-    fontWeight: "bold",
-  },
-  buttonGreen: {
-    marginTop: "10px",
-    padding: "10px",
-    borderRadius: "5px",
-    backgroundColor: "#28a745",
+  button: {
+    backgroundColor: "#007bff",
     color: "white",
     border: "none",
-    cursor: "pointer",
-    fontSize: "14px",
-  },
-  buttonRed: {
-    marginTop: "10px",
-    padding: "10px",
+    padding: "5px 10px",
     borderRadius: "5px",
-    backgroundColor: "#dc3545",
-    color: "white",
-    border: "none",
     cursor: "pointer",
-    fontSize: "14px",
+    margin: "5px",
   },
-  buttonDisabled: {
+  disabledButton: {
     backgroundColor: "#ccc",
+    color: "#666",
+    border: "none",
+    padding: "5px 10px",
+    borderRadius: "5px",
     cursor: "not-allowed",
+    margin: "5px",
   },
 };
 
-const CartWidget = ({ cartItems, cartOpen, setCartOpen, emptyCart }) => {
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
+const CartWidget = ({
+  cartItems,
+  setCartItems,
+  cartOpen,
+  setCartOpen,
+  emptyCart,
+  products,
+  setProducts,
+}) => {
   const total = cartItems
     .reduce((acc, item) => acc + item.price * item.quantity, 0)
     .toFixed(2);
 
   useEffect(() => {
-    // Guardar el contenido del carrito en localStorage
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const handleEmptyCart = () => {
-    setShowConfirmation(true); // Mostrar mensaje de confirmación
+  // Aumentar la cantidad de un producto y reducir su stock
+  const increaseQuantity = (id) => {
+    const productInStock = products.find((p) => p.id === id);
+
+    if (productInStock && productInStock.stock > 0) {
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === id ? { ...p, stock: p.stock - 1 } : p
+        )
+      );
+    }
   };
 
-  const handleConfirmEmptyCart = () => {
-    emptyCart(); // Vaciar el carrito
-    setShowConfirmation(false); // Ocultar mensaje de confirmación
-  };
+  // Disminuir la cantidad de un producto y aumentar su stock
+  const decreaseQuantity = (id) => {
+    const cartItem = cartItems.find((item) => item.id === id);
 
-  const handleCancelEmptyCart = () => {
-    setShowConfirmation(false); // Ocultar mensaje de confirmación sin vaciar el carrito
+    if (cartItem && cartItem.quantity > 1) {
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+      );
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === id ? { ...p, stock: p.stock + 1 } : p
+        )
+      );
+    } else if (cartItem && cartItem.quantity === 1) {
+      // Eliminar del carrito si queda solo una unidad
+      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === id ? { ...p, stock: p.stock + 1 } : p
+        )
+      );
+    }
   };
 
   const handlePurchase = () => {
-    alert("¡Gracias por tu compra! El carrito ha sido vaciado.");
-    emptyCart(); // Vaciar el carrito tras la compra, sin mostrar confirmación
+    alert("¡Gracias por tu compra!");
+    setCartItems([]);
+    // No hacemos nada con el stock, pues se supone que ya ha sido ajustado al comprar
   };
 
   return (
     <div style={styles.cartWidget}>
-      {/* Ícono del carrito */}
       <span
         className="material-symbols-outlined"
         style={styles.icon}
@@ -104,54 +117,45 @@ const CartWidget = ({ cartItems, cartOpen, setCartOpen, emptyCart }) => {
       >
         shopping_cart
       </span>
-
-      {/* Confirmación para vaciar el carrito */}
-      {showConfirmation && (
-        <div style={styles.alertContainer}>
-          <Alert style={styles.alert}>
-            <h4>¿Estás seguro?</h4>
-            <p>Esto eliminará todos los productos del carrito.</p>
-            <div>
-              <button
-                style={{ ...styles.buttonGreen, marginRight: "10px" }}
-                onClick={handleCancelEmptyCart}
-              >
-                Cancelar
-              </button>
-              <button style={styles.buttonRed} onClick={handleConfirmEmptyCart}>
-                Confirmar
-              </button>
-            </div>
-          </Alert>
-        </div>
-      )}
-
-      {/* Dropdown del carrito */}
       {cartOpen && (
         <div style={styles.dropdown}>
           <h4>Carrito</h4>
           {cartItems.length > 0 ? (
             <>
               <ul>
-                {cartItems.map((item, index) => (
-                  <li key={index}>
+                {cartItems.map((item) => (
+                  <li key={item.id}>
                     {item.name} (x{item.quantity}) - $
-                    {(item.price * item.quantity).toFixed(2)}
+                    {item.price.toFixed(2)}
+                    <div>
+                      <button
+                        style={
+                          products.find((p) => p.id === item.id)?.stock > 0
+                            ? styles.button
+                            : styles.disabledButton
+                        }
+                        onClick={() => increaseQuantity(item.id)}
+                        disabled={
+                          products.find((p) => p.id === item.id)?.stock === 0
+                        }
+                      >
+                        +
+                      </button>
+                      <button
+                        style={styles.button}
+                        onClick={() => decreaseQuantity(item.id)}
+                      >
+                        -
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
               <p>Total: ${total}</p>
-              <button style={styles.buttonRed} onClick={handleEmptyCart}>
+              <button style={styles.button} onClick={emptyCart}>
                 Vaciar Carrito
               </button>
-              <button
-                style={{
-                  ...styles.buttonGreen,
-                  ...(cartItems.length === 0 ? styles.buttonDisabled : {}),
-                }}
-                onClick={handlePurchase}
-                disabled={cartItems.length === 0}
-              >
+              <button style={styles.button} onClick={handlePurchase}>
                 Comprar
               </button>
             </>
