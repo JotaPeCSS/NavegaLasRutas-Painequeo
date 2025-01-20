@@ -1,30 +1,45 @@
-# NavegaLasRutas-Painequeo
+# Tienda Online React - Proyecto Final
 
-NavegaLasRutas-Painequeo es una aplicación web interactiva desarrollada con React que simula una tienda en línea. Este proyecto fue diseñado para implementar conceptos fundamentales y avanzados de React, como manejo de estados, enrutamiento dinámico, gestión de contextos, persistencia de datos y componentes reutilizables. Además, utiliza estilos personalizados con Bootstrap y CSS nativo para ofrecer una interfaz amigable.
+Este proyecto es una aplicación web interactiva de una tienda online creada con **React.js**. La aplicación permite a los usuarios explorar una lista de productos, visualizar detalles específicos, y gestionar un carrito de compras con funcionalidades dinámicas, como control de stock y persistencia de datos. El proyecto ha sido desarrollado siguiendo las mejores prácticas de desarrollo frontend y cumpliendo con una rúbrica específica de evaluación.
 
-## Funcionalidades principales
+## 🚀 Funcionalidades
 
-- **Carrito de compras**:
-  - Añade productos al carrito desde el catálogo principal.
-  - Controla la cantidad de productos en el carrito según su stock disponible.
-  - Persiste el estado del carrito en `localStorage`, permitiendo que el usuario conserve su selección tras recargar la página.
-  - Incluye botones para vaciar el carrito con confirmación y para finalizar la compra.
+1. **Listado de Productos**:
+   - Visualización de productos con detalles básicos (nombre, precio, stock).
+   - Botón para añadir productos al carrito, respetando el límite de stock.
 
-- **Mensajes interactivos**:
-  - Alertas estilizadas (usando Bootstrap) para notificar al usuario sobre acciones importantes, como añadir productos, vaciar el carrito o finalizar la compra.
+2. **Detalle de Producto**:
+   - Vista detallada de cada producto al hacer clic en "Ver detalle".
+   - Botón "Volver" para regresar al listado de productos.
 
-- **Gestión de productos**:
-  - Catálogo dinámico con stock controlado.
-  - Productos deshabilitados automáticamente cuando el stock llega a 0.
+3. **Carrito de Compras**:
+   - Añadir o quitar productos desde el carrito con los botones `+` y `-`.
+   - Botón para vaciar el carrito y otro para finalizar la compra.
+   - Control dinámico del stock: las unidades añadidas o eliminadas afectan directamente al stock disponible.
+   - Persistencia del carrito en `localStorage`.
 
-- **Enrutamiento**:
-  - Navegación entre diferentes vistas, como el catálogo general, productos por categoría, y detalles individuales de cada producto.
-  - Manejo de rutas no existentes con una página de error personalizada.
+4. **Alertas Dinámicas**:
+   - Notificaciones visuales para confirmar acciones como añadir productos, vaciar el carrito, o finalizar la compra.
 
-## Tecnologías utilizadas
+5. **Rutas Navegables**:
+   - Implementación de `react-router-dom` para gestionar:
+     - `/`: Listado de productos.
+     - `/producto/:id`: Detalle de un producto específico.
 
-- **React**: Para la construcción de componentes reutilizables y manejo de estados.
-- **React Router DOM**: Para implementar enrutamiento dinámico.
-- **Bootstrap**: Para estilos predefinidos y alertas interactivas.
-- **CSS nativo**: Para personalizar el diseño y agregar detalles únicos a la interfaz.
-- **LocalStorage**: Para mantener la persistencia del carrito.
+6. **Promesas Simuladas**:
+   - Simulación de una API para cargar los productos de forma asíncrona.
+
+## 🛠️ Tecnologías Utilizadas
+
+- **React.js**: Framework principal para la creación de la aplicación.
+- **React Router**: Gestión de rutas dinámicas.
+- **React-Bootstrap**: Estilización de componentes y alertas dinámicas.
+- **HTML5 y CSS3**: Maquetación y estilos personalizados.
+- **JavaScript (ES6+)**: Lógica y funcionalidad del frontend.
+
+## 📦 Cómo Ejecutar el Proyecto
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/JotaPeCSS/NavegaLasRutas-Painequeo.git
+   cd NavegaLasRutas-Painequeo
