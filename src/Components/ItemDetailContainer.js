@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const styles = {
   container: {
@@ -25,32 +25,46 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
   },
+  backButton: {
+    marginTop: "10px",
+    backgroundColor: "#6c757d",
+    color: "white",
+    border: "none",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginRight: "10px",
+  },
 };
 
-const ItemDetailContainer = ({ addToCart }) => {
+const ItemDetailContainer = ({ products, addToCart }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  const productDetails = {
-    1: { name: "Camisa Roja", price: 20, stock: 10, description: "Una camisa roja vibrante y cómoda para cualquier ocasión." },
-    2: { name: "Camisa Azul", price: 25, stock: 8, description: "Camisa azul con estilo moderno y elegante." },
-    3: { name: "Camisa Amarilla", price: 30, stock: 5, description: "Camisa amarilla de algodón, ideal para días soleados." },
-  };
-
-  const product = productDetails[id];
+  const product = products.find((p) => p.id === parseInt(id));
 
   if (!product) {
-    return <p style={{ textAlign: "center" }}>Producto no encontrado.</p>;
+    return <p>Producto no encontrado.</p>;
   }
 
   return (
     <div style={styles.container}>
       <div style={styles.detailCard}>
         <h2>{product.name}</h2>
-        <p>{product.description}</p>
-        <p>Precio: ${product.price.toFixed(2)}</p>
+        <p>Precio: ${product.price}</p>
         <p>Stock: {product.stock}</p>
-        <button style={styles.button} onClick={() => addToCart(product)}>
-          Añadir al Carrito
+        <button
+          style={styles.button}
+          onClick={() => addToCart(product)}
+          disabled={product.stock === 0}
+        >
+          Añadir al carrito
+        </button>
+        <button
+          style={styles.backButton}
+          onClick={() => navigate(-1)} // Navega hacia la página anterior
+        >
+          Volver
         </button>
       </div>
     </div>

@@ -32,15 +32,14 @@ const NavBar = ({
         <img src="./media/logo.png" alt="Tienda Logo" style={styles.logo} />
       </a>
       <CartWidget
-        cartItems={cartItems}
-        setCartItems={setCartItems}
-        cartOpen={cartOpen}
-        setCartOpen={setCartOpen}
-        emptyCart={emptyCart}
-        removeFromCart={removeFromCart}
-        products={products}
-        setProducts={setProducts}
-      />
+  cartItems={cartItems}
+  setCartItems={setCartItems}
+  cartOpen={cartOpen}
+  setCartOpen={setCartOpen}
+  products={products}
+  setProducts={setProducts}
+/>
+
     </nav>
   );
 };

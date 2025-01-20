@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Alert from "react-bootstrap/Alert";
 
 const styles = {
   cartWidget: {
@@ -21,8 +22,8 @@ const styles = {
     padding: "15px",
     zIndex: "1000",
   },
-  button: {
-    backgroundColor: "#007bff",
+  buttonAdd: {
+    backgroundColor: "#28a745", // Verde para el botón "+"
     color: "white",
     border: "none",
     padding: "5px 10px",
@@ -30,26 +31,42 @@ const styles = {
     cursor: "pointer",
     margin: "5px",
   },
-  disabledButton: {
-    backgroundColor: "#ccc",
-    color: "#666",
+  buttonRemove: {
+    backgroundColor: "#dc3545", // Rojo para el botón "-"
+    color: "white",
     border: "none",
     padding: "5px 10px",
     borderRadius: "5px",
-    cursor: "not-allowed",
+    cursor: "pointer",
     margin: "5px",
+  },
+  buttonVaciar: {
+    backgroundColor: "#ffc107", // Amarillo para "Vaciar Carrito"
+    color: "#333",
+    border: "none",
+    padding: "8px 15px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginTop: "10px",
+  },
+  buttonComprar: {
+    backgroundColor: "#007bff", // Azul para "Comprar"
+    color: "white",
+    border: "none",
+    padding: "8px 15px",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginTop: "10px",
+    marginLeft: "10px",
+  },
+  buttonDisabled: {
+    backgroundColor: "#ccc",
+    color: "#666",
+    cursor: "not-allowed",
   },
 };
 
-const CartWidget = ({
-  cartItems,
-  setCartItems,
-  cartOpen,
-  setCartOpen,
-  emptyCart,
-  products,
-  setProducts,
-}) => {
+const CartWidget = ({ cartItems, setCartItems, cartOpen, setCartOpen, products, setProducts }) => {
   const total = cartItems
     .reduce((acc, item) => acc + item.price * item.quantity, 0)
     .toFixed(2);
@@ -58,11 +75,9 @@ const CartWidget = ({
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Aumentar la cantidad de un producto y reducir su stock
   const increaseQuantity = (id) => {
-    const productInStock = products.find((p) => p.id === id);
-
-    if (productInStock && productInStock.stock > 0) {
+    const product = products.find((p) => p.id === id);
+    if (product && product.stock > 0) {
       setCartItems((prevItems) =>
         prevItems.map((item) =>
           item.id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -76,36 +91,48 @@ const CartWidget = ({
     }
   };
 
-  // Disminuir la cantidad de un producto y aumentar su stock
   const decreaseQuantity = (id) => {
-    const cartItem = cartItems.find((item) => item.id === id);
-
-    if (cartItem && cartItem.quantity > 1) {
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-        )
-      );
-      setProducts((prevProducts) =>
-        prevProducts.map((p) =>
-          p.id === id ? { ...p, stock: p.stock + 1 } : p
-        )
-      );
-    } else if (cartItem && cartItem.quantity === 1) {
-      // Eliminar del carrito si queda solo una unidad
-      setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-      setProducts((prevProducts) =>
-        prevProducts.map((p) =>
-          p.id === id ? { ...p, stock: p.stock + 1 } : p
-        )
-      );
+    const item = cartItems.find((item) => item.id === id);
+    if (item) {
+      if (item.quantity > 1) {
+        // Reduce la cantidad del producto en el carrito
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          )
+        );
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === id ? { ...p, stock: p.stock + 1 } : p
+          )
+        );
+      } else {
+        // Elimina el producto del carrito si la cantidad es 1
+        setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === id ? { ...p, stock: p.stock + 1 } : p
+          )
+        );
+      }
     }
   };
 
-  const handlePurchase = () => {
-    alert("¡Gracias por tu compra!");
+  const handleEmptyCart = () => {
+    cartItems.forEach((item) => {
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === item.id ? { ...p, stock: p.stock + item.quantity } : p
+        )
+      );
+    });
     setCartItems([]);
-    // No hacemos nada con el stock, pues se supone que ya ha sido ajustado al comprar
+    alert("¡El carrito ha sido vaciado!");
+  };
+
+  const handlePurchase = () => {
+    setCartItems([]);
+    alert("¡Gracias por tu compra!");
   };
 
   return (
@@ -117,6 +144,7 @@ const CartWidget = ({
       >
         shopping_cart
       </span>
+
       {cartOpen && (
         <div style={styles.dropdown}>
           <h4>Carrito</h4>
@@ -125,24 +153,17 @@ const CartWidget = ({
               <ul>
                 {cartItems.map((item) => (
                   <li key={item.id}>
-                    {item.name} (x{item.quantity}) - $
-                    {item.price.toFixed(2)}
+                    {item.name} (x{item.quantity}) - ${item.price.toFixed(2)}
                     <div>
                       <button
-                        style={
-                          products.find((p) => p.id === item.id)?.stock > 0
-                            ? styles.button
-                            : styles.disabledButton
-                        }
+                        style={styles.buttonAdd}
                         onClick={() => increaseQuantity(item.id)}
-                        disabled={
-                          products.find((p) => p.id === item.id)?.stock === 0
-                        }
+                        disabled={products.find((p) => p.id === item.id)?.stock === 0}
                       >
                         +
                       </button>
                       <button
-                        style={styles.button}
+                        style={styles.buttonRemove}
                         onClick={() => decreaseQuantity(item.id)}
                       >
                         -
@@ -152,10 +173,17 @@ const CartWidget = ({
                 ))}
               </ul>
               <p>Total: ${total}</p>
-              <button style={styles.button} onClick={emptyCart}>
+              <button style={styles.buttonVaciar} onClick={handleEmptyCart}>
                 Vaciar Carrito
               </button>
-              <button style={styles.button} onClick={handlePurchase}>
+              <button
+                style={{
+                  ...styles.buttonComprar,
+                  ...(cartItems.length === 0 ? styles.buttonDisabled : {}),
+                }}
+                onClick={handlePurchase}
+                disabled={cartItems.length === 0}
+              >
                 Comprar
               </button>
             </>

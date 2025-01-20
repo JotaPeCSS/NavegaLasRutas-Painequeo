@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const styles = {
   container: {
@@ -15,7 +16,7 @@ const styles = {
     border: "1px solid #ccc",
     backgroundColor: "#fff",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    borderRadius: "8px",
+    borderRadius: "5px",
     textAlign: "center",
   },
   button: {
@@ -47,6 +48,9 @@ const ItemListContainer = ({ greeting, products, addToCart }) => {
             <p>{product.name}</p>
             <p>Precio: ${product.price.toFixed(2)}</p>
             <p>Stock: {product.stock}</p>
+            <Link to={`/producto/${product.id}`}>
+              <button style={styles.button}>Ver detalle</button>
+            </Link>
             <button
               style={product.stock > 0 ? styles.button : styles.disabledButton}
               onClick={() => addToCart(product)}
