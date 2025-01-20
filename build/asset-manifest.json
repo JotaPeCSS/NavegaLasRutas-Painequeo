@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/NavegaLasRutas-Painequeo/static/css/main.1061d363.css",
-    "main.js": "/NavegaLasRutas-Painequeo/static/js/main.b218a866.js",
+    "main.js": "/NavegaLasRutas-Painequeo/static/js/main.9a250f8b.js",
     "index.html": "/NavegaLasRutas-Painequeo/index.html",
     "main.1061d363.css.map": "/NavegaLasRutas-Painequeo/static/css/main.1061d363.css.map",
-    "main.b218a866.js.map": "/NavegaLasRutas-Painequeo/static/js/main.b218a866.js.map"
+    "main.9a250f8b.js.map": "/NavegaLasRutas-Painequeo/static/js/main.9a250f8b.js.map"
   },
   "entrypoints": [
     "static/css/main.1061d363.css",
-    "static/js/main.b218a866.js"
+    "static/js/main.9a250f8b.js"
   ]
 }
