@@ -1,0 +1,105 @@
+/* styles/Home.css */
+.home-container {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .home-header {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .intro-text {
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+  
+  .intro-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .intro-text {
+    width: 50%;
+  }
+  
+  .view-products-btn {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-products-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .image-container {
+    width: 45%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .promo-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .features {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #ffffff;
+  }
+  
+  .feature-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .feature-card {
+    width: 30%;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #f0f0f0;
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);  /* Efecto hover que eleva la tarjeta */
+  }
+  
+  .feature-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .card-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .home-footer {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+  }
+  

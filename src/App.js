@@ -1,109 +1,160 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import ProductDetail from "./pages/ProductDetail";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import NavBar from "./Components/NavBar";
-import ItemListContainer from "./Components/ItemListContainer";
-import AlertMessage from "./Components/AlertMessage";
-import ItemDetailContainer from "./Components/ItemDetailContainer";
+import CartWidget from "./Components/CartWidget";
+import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { db } from "./firebase/firebaseConfig";
 
 function App() {
-  const [cartItems, setCartItems] = useState(() => {
-    const storedCart = localStorage.getItem("cart");
-    return storedCart ? JSON.parse(storedCart) : [];
-  });
-
+  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
-  const [alert, setAlert] = useState({
-    show: false,
-    message: "",
-    variant: "success",
-  });
 
-  const [products, setProducts] = useState([
-    { id: 1, name: "Camisa Roja", price: 20, stock: 10 },
-    { id: 2, name: "Camisa Azul", price: 25, stock: 8 },
-    { id: 3, name: "Camisa Amarilla", price: 30, stock: 5 },
-  ]);
-
+  // Obtener productos desde Firebase
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "Productos"));
+        const productList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productList);
+      } catch (error) {
+        console.error("Error al obtener productos:", error);
+      }
+    };
 
-  const addToCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingProduct = prevItems.find((item) => item.id === product.id);
-      if (existingProduct) {
-        if (product.stock > 0) {
-          return prevItems.map((item) =>
-            item.id === product.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          );
-        } else {
-          showAlert("Sin stock disponible.", "danger");
-          return prevItems;
-        }
+    fetchProducts();
+  }, []);
+
+  // Función para agregar productos al carrito
+  const addToCart = async (product) => {
+    setCartItems((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
       } else {
-        if (product.stock > 0) {
-          return [...prevItems, { ...product, quantity: 1 }];
-        } else {
-          showAlert("Sin stock disponible.", "danger");
-          return prevItems;
-        }
+        return [...prevCart, { ...product, quantity: 1 }];
       }
     });
 
-    setProducts((prevProducts) =>
-      prevProducts.map((p) =>
-        p.id === product.id ? { ...p, stock: p.stock - 1 } : p
-      )
-    );
-
-    setCartOpen(true);
-    showAlert("Producto añadido al carrito.", "success");
+    // Actualizar stock en Firebase
+    const productRef = doc(db, "Productos", product.id);
+    try {
+      await updateDoc(productRef, { stock: product.stock - 1 });
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === product.id ? { ...p, stock: p.stock - 1 } : p
+        )
+      );
+    } catch (error) {
+      console.error("Error al actualizar stock:", error);
+    }
   };
 
-  const showAlert = (message, variant) => {
-    setAlert({ show: true, message, variant });
-    setTimeout(() => setAlert({ ...alert, show: false }), 3000);
+  // Función para eliminar un producto del carrito completamente
+  const removeFromCart = async (productId) => {
+    const removedProduct = cartItems.find((item) => item.id === productId);
+    setCartItems(cartItems.filter((item) => item.id !== productId));
+
+    if (removedProduct) {
+      // Restaurar el stock en Firebase
+      const productRef = doc(db, "Productos", productId);
+      try {
+        await updateDoc(productRef, { stock: removedProduct.stock + removedProduct.quantity });
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === productId ? { ...p, stock: p.stock + removedProduct.quantity } : p
+          )
+        );
+      } catch (error) {
+        console.error("Error al restaurar stock:", error);
+      }
+    }
+  };
+
+  // Función para aumentar la cantidad de un producto en el carrito
+  const increaseQuantity = async (product) => {
+    if (product.stock > 0) {
+      setCartItems((prevCart) =>
+        prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+
+      // Actualizar stock en Firebase
+      const productRef = doc(db, "Productos", product.id);
+      try {
+        await updateDoc(productRef, { stock: product.stock - 1 });
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === product.id ? { ...p, stock: p.stock - 1 } : p
+          )
+        );
+      } catch (error) {
+        console.error("Error al actualizar stock:", error);
+      }
+    }
+  };
+
+  // Función para reducir la cantidad de un producto en el carrito
+  const decreaseQuantity = async (product) => {
+    setCartItems((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+
+    // Restaurar stock en Firebase después de 1 segundo
+    setTimeout(async () => {
+      const productRef = doc(db, "Productos", product.id);
+      try {
+        await updateDoc(productRef, { stock: product.stock + 1 });
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === product.id ? { ...p, stock: p.stock + 1 } : p
+          )
+        );
+      } catch (error) {
+        console.error("Error al restaurar stock:", error);
+      }
+    }, 1000);
   };
 
   return (
-    <Router basename="/NavegaLasRutas-Painequeo">
-      <div style={{ textAlign: "center", backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
-        <NavBar
-          cartItems={cartItems}
-          setCartItems={setCartItems}
-          cartOpen={cartOpen}
-          setCartOpen={setCartOpen}
-          products={products}
-          setProducts={setProducts}
-        />
-
-        <Routes>
-        <Route
-  path="/"
-  element={
-    <ItemListContainer
-      greeting="Bienvenido a nuestra tienda"
-      products={products}
-      addToCart={addToCart}
-    />
-  }
-/>
-          <Route
-            path="/producto/:id"
-            element={<ItemDetailContainer products={products} addToCart={addToCart} />}
-          />
-        </Routes>
-
-        <AlertMessage
-          message={alert.message}
-          show={alert.show}
-          variant={alert.variant}
-          onClose={() => setAlert({ ...alert, show: false })}
-        />
-      </div>
-    </Router>
+    <>
+      <NavBar cartOpen={cartOpen} setCartOpen={setCartOpen} />
+      <CartWidget
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+        cartOpen={cartOpen}
+        setCartOpen={setCartOpen}
+        products={products}
+        setProducts={setProducts}
+        increaseQuantity={increaseQuantity}
+        decreaseQuantity={decreaseQuantity}
+        removeFromCart={removeFromCart}
+      />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/productos" element={<Products products={products} addToCart={addToCart} />} />
+        <Route path="/producto/:id" element={<ProductDetail products={products} addToCart={addToCart} />} />
+        <Route path="/nosotros" element={<About />} />
+        <Route path="/contacto" element={<Contact />} />
+      </Routes>
+    </>
   );
 }
 
